@@ -45,6 +45,7 @@ object AppModule {
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()
+            .setPrettyPrinting()
             .create()
     }
 
