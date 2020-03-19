@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.currencyconverter.R
+import com.example.currencyconverter.ViewModelProviderFactory
+import javax.inject.Inject
 
 class MainFragment : Fragment() {
-
     companion object {
         fun newInstance() = MainFragment()
     }
 
-    private val viewModel: MainViewModel by activityViewModels()
+    @Inject
+    internal lateinit var factory: ViewModelProviderFactory
+    private val viewModel: MainViewModel by activityViewModels() { factory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
