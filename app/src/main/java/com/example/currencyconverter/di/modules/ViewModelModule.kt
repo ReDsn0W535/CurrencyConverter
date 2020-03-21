@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.currencyconverter.ViewModelProviderFactory
 import com.example.currencyconverter.di.scope.ViewModelKey
-import com.example.currencyconverter.ui.currencySheet.CurrenciesSheetViewModel
 import com.example.currencyconverter.ui.main.MainViewModel
 import dagger.Binds
 import dagger.Module
@@ -20,9 +19,4 @@ abstract class ViewModelModule{
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(viewModel : MainViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(CurrenciesSheetViewModel::class)
-    abstract fun bindCurrenciesSheetVieModel(viewModel : CurrenciesSheetViewModel): ViewModel
 }

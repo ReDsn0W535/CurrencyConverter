@@ -1,8 +1,12 @@
 package com.example.currencyconverter.di.modules
 
+import android.app.Application
+import android.content.Context
 import android.provider.SyncStateContract
+import com.example.currencyconverter.CurrencyConverterApp
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -12,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Module(includes = [RepositoryModule::class])
+@Module(includes = [ViewModelModule::class])
 object AppModule {
 
     @Singleton
@@ -54,4 +58,7 @@ object AppModule {
     fun provideGsonConverterFactory(gson: Gson): GsonConverterFactory {
         return GsonConverterFactory.create(gson)
     }
+    @Provides
+    @Singleton
+    fun bindContext(application: CurrencyConverterApp) = application.applicationContext
 }
