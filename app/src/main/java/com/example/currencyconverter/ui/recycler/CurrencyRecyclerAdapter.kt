@@ -9,7 +9,7 @@ import com.example.currencyconverter.R
 
 class CurrencyRecyclerAdapter(
     private val currencies: List<String>,
-    private val onClick: (String) -> Unit
+    private val onClick: ((String) -> Unit)?
 ) : RecyclerView.Adapter<CurrencyRecyclerAdapter.CurrencyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
@@ -32,7 +32,7 @@ class CurrencyRecyclerAdapter(
             itemView.findViewById<TextView>(R.id.currency_name).apply {
                 text = currency
                 setOnClickListener {
-                    onClick.invoke(currency)
+                    onClick?.invoke(currency)
                 }
             }
         }

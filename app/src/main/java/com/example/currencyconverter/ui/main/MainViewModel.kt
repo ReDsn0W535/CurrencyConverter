@@ -1,5 +1,6 @@
 package com.example.currencyconverter.ui.main
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverter.reposiroty.CurrencyRepository
@@ -11,7 +12,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val currencyRepository: CurrencyRepository
 ) : ViewModel() {
-    // TODO: Implement the ViewModel
+
+    val from = MutableLiveData<String>()
+    val fromAmount = MutableLiveData<String>().also { it.value = "1" }
+    val to = MutableLiveData<String>()
+    val toAmount = MutableLiveData<String>()
 
     fun init() {
         viewModelScope.launch {
@@ -21,4 +26,8 @@ class MainViewModel @Inject constructor(
         }
     }
     fun currenciesList() = currencyRepository.getList()
+
+    fun convert(){
+
+    }
 }

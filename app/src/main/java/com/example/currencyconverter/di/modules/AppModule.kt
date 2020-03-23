@@ -1,12 +1,10 @@
 package com.example.currencyconverter.di.modules
 
-import android.app.Application
 import android.content.Context
-import android.provider.SyncStateContract
+import androidx.room.Room
 import com.example.currencyconverter.CurrencyConverterApp
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -19,18 +17,27 @@ import javax.inject.Singleton
 @Module(includes = [ViewModelModule::class])
 object AppModule {
 
+/*    @Singleton
+    @Provides
+    fun provideDatabase(context: Context) = Room
+            .databaseBuilder(context, CurrencyDatabase::class.java, "database").build()
+
     @Singleton
     @Provides
-    fun getOkHttpClient() : OkHttpClient{
+    fun provideDao(currencyDatabase: CurrencyDatabase) = currencyDatabase.currencyDao()*/
+
+    @Singleton
+    @Provides
+    fun getOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         var okHttpClient = OkHttpClient()
         okHttpClient = okHttpClient.newBuilder()
-            .addInterceptor(interceptor)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .build()
+                .addInterceptor(interceptor)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .build()
 
         return okHttpClient
     }

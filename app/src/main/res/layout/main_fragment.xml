@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
+                android:text="@={viewModel.from}"
                 android:hint="from" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
-                android:text="1" />
+                android:text="@={viewModel.fromAmount}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
+                android:text="@={viewModel.to}"
                 android:hint="to" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
-                android:text="1" />
+                android:text="@={viewModel.toAmount}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -86,12 +88,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Convert"
+            android:onClick="@{() -> viewModel.convert()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/currency_from_layout" />
 
 
-        <include layout="@layout/bottom_sheet" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

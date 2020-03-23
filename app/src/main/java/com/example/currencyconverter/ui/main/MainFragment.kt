@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,14 +17,13 @@ import com.example.currencyconverter.databinding.MainFragmentBinding
 import com.example.currencyconverter.ui.recycler.CurrencyRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.DaggerFragment
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 
 //TODO("добавить BaseFragment")
-open class MainFragment : DaggerFragment() {
+open class MainFragment : Fragment() {
     companion object {
         const val TAG = "MainFragment"
         fun newInstance() = MainFragment()
@@ -40,6 +40,7 @@ open class MainFragment : DaggerFragment() {
         viewModel.init()
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false)
@@ -59,31 +60,33 @@ open class MainFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataBinding.currencyFrom.setOnClickListener {
-            val dialog = BottomSheetDialog(this.requireContext())
-            val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
-            dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
-                adapter = CurrencyRecyclerAdapter(viewModel.currenciesList()) { value ->
-                    (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
-                    dialog.dismiss()
+        dataBinding.apply {
+            currencyFrom.setOnClickListener {
+                val dialog = BottomSheetDialog(this@MainFragment.requireContext())
+                val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
+                dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
+                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList()) { value ->
+                        (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
+                        dialog.dismiss()
+                    }
+                    layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 }
-                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+                dialog.setContentView(dialogView)
+                dialog.show()
             }
-            dialog.setContentView(dialogView)
-            dialog.show()
-        }
-        dataBinding.currencyTo.setOnClickListener {
-            val dialog = BottomSheetDialog(this.requireContext())
-            val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
-            dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
-                adapter = CurrencyRecyclerAdapter(viewModel.currenciesList()) { value ->
-                    (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
-                    dialog.dismiss()
+            currencyTo.setOnClickListener {
+                val dialog = BottomSheetDialog(this@MainFragment.requireContext())
+                val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
+                dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
+                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList()) { value ->
+                        (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
+                        dialog.dismiss()
+                    }
+                    layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 }
-                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+                dialog.setContentView(dialogView)
+                dialog.show()
             }
-            dialog.setContentView(dialogView)
-            dialog.show()
         }
     }
 }
