@@ -3,6 +3,7 @@ package com.example.currencyconverter.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.example.currencyconverter.CurrencyConverterApp
+import com.example.currencyconverter.data.database.CurrencyDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -17,14 +18,14 @@ import javax.inject.Singleton
 @Module(includes = [ViewModelModule::class])
 object AppModule {
 
-/*    @Singleton
+    @Singleton
     @Provides
     fun provideDatabase(context: Context) = Room
             .databaseBuilder(context, CurrencyDatabase::class.java, "database").build()
 
     @Singleton
     @Provides
-    fun provideDao(currencyDatabase: CurrencyDatabase) = currencyDatabase.currencyDao()*/
+    fun provideDao(currencyDatabase: CurrencyDatabase) = currencyDatabase.currencyDao()
 
     @Singleton
     @Provides

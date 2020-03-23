@@ -5,7 +5,7 @@ import dagger.MapKey
 import java.lang.annotation.Documented
 import kotlin.reflect.KClass
 
-@Documented
+@MustBeDocumented
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
