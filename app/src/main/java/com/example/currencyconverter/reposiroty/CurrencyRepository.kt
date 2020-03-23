@@ -1,6 +1,8 @@
 package com.example.currencyconverter.reposiroty
 
 import com.example.currencyconverter.data.api.ExchangeRatesApi
+import com.example.currencyconverter.data.database.CurrencyDao
+import com.example.currencyconverter.data.database.CurrencyDatabase
 import com.example.currencyconverter.data.model.Currency
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -8,11 +10,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import retrofit2.Retrofit
 import javax.inject.Inject
 
 
-class CurrencyRepository @Inject constructor(retrofit: Retrofit, private val gson: Gson) {
+class CurrencyRepository @Inject constructor(
+    retrofit: Retrofit,
+    private val gson: Gson,
+    private val currencyDao: CurrencyDao
+) {
     private val networkClient = retrofit.create(ExchangeRatesApi::class.java)
     private val scope = CoroutineScope(Dispatchers.IO)
     private val currenciesList = scope.async {
@@ -29,10 +36,9 @@ class CurrencyRepository @Inject constructor(retrofit: Retrofit, private val gso
         currenciesList.await().forEach { currency ->
             emit(getRatesByCurrency(currency))
         }
-    }.also {
-        //cash it!!
-        it
-    }
+    }/*.onEach {
+        currencyDatabase.currencyDao().insert(it)
+    }*/
 
     fun getList() = listOf(
         "CAD",

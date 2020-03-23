@@ -16,12 +16,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module(includes = [ViewModelModule::class])
-object AppModule {
+class AppModule(private val app: CurrencyConverterApp) {
 
     @Singleton
     @Provides
     fun provideDatabase(context: Context) = Room
-            .databaseBuilder(context, CurrencyDatabase::class.java, "database").build()
+            .databaseBuilder(context, CurrencyDatabase::class.java, "database").allowMainThreadQueries().build()
 
     @Singleton
     @Provides
@@ -68,5 +68,5 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun bindContext(application: CurrencyConverterApp) = application.applicationContext
+    fun bindContext() : Context = app
 }

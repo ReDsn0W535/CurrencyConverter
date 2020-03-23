@@ -2,8 +2,8 @@ package com.example.currencyconverter
 
 import android.app.Application
 import com.example.currencyconverter.di.components.DaggerAppComponent
+import com.example.currencyconverter.di.modules.AppModule
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import timber.log.Timber
@@ -18,7 +18,8 @@ class CurrencyConverterApp : Application(), HasAndroidInjector {
         super.onCreate()
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
-        DaggerAppComponent.builder().application(this).build().inject(this)
+        DaggerAppComponent.builder().application(this).appModule(AppModule(this)).build()
+            .inject(this)
     }
 
     override fun androidInjector(): AndroidInjector<Any> = injector
