@@ -37,7 +37,6 @@ open class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
-        viewModel.init()
         super.onCreate(savedInstanceState)
     }
 
@@ -51,7 +50,7 @@ open class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         dataBinding.apply {
-            setVariable(BR.viewModel, viewModel)
+            viewModel = this@MainFragment.viewModel
             lifecycleOwner = this@MainFragment
             executePendingBindings()
         }
@@ -60,12 +59,13 @@ open class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dataBinding.lifecycleOwner = this
         dataBinding.apply {
             currencyFrom.setOnClickListener {
                 val dialog = BottomSheetDialog(this@MainFragment.requireContext())
                 val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
                 dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
-                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList()) { value ->
+                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList) { value ->
                         (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
                         dialog.dismiss()
                     }
@@ -78,7 +78,7 @@ open class MainFragment : Fragment() {
                 val dialog = BottomSheetDialog(this@MainFragment.requireContext())
                 val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
                 dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
-                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList()) { value ->
+                    adapter = CurrencyRecyclerAdapter(this@MainFragment.viewModel.currenciesList) { value ->
                         (it as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
                         dialog.dismiss()
                     }
@@ -86,6 +86,10 @@ open class MainFragment : Fragment() {
                 }
                 dialog.setContentView(dialogView)
                 dialog.show()
+            }
+            this@MainFragment.viewModel.init()
+            convertButton.setOnClickListener {
+                this@MainFragment.viewModel.convert()
             }
         }
     }

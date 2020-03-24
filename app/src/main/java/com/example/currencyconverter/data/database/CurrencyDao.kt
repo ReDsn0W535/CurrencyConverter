@@ -6,7 +6,7 @@ import com.example.currencyconverter.data.model.Currency
 @Dao
 interface CurrencyDao {
     @Query("SELECT * FROM currency")
-    fun getAll(): List<Currency>?
+    fun getAll(): List<Currency>
 
     @Query("SELECT * FROM currency WHERE base = :base")
     fun getById(base: String): Currency?
