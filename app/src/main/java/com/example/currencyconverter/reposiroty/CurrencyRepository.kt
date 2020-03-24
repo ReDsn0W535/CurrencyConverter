@@ -61,14 +61,6 @@ class CurrencyRepository @Inject constructor(
         }
 
     }
-/*    fun getCurrenciesTable(): ArrayList<Currency> {
-        return try {
-            currenciesTable.getCompleted()
-        } catch (e: Exception) {
-            currenciesTable.cancel()
-            currencyDao.getAll() as ArrayList<Currency>
-        }
-    }*/
 
     fun convert(from: String, to: String): Double {
         getTable().forEach {

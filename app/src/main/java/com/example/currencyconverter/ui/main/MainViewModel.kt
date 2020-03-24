@@ -12,24 +12,13 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val from = MutableLiveData<String>()
-    val fromAmount = MutableLiveData<String>().also { it.value = "1" }
+    val fromAmount = MutableLiveData<String>("1")
     val to = MutableLiveData<String>()
     val toAmount = MutableLiveData<String>()
-    val rates = ArrayList<Currency>()
-    fun init() {
-        /*viewModelScope.launch {
-            currencyRepository.getCurrenciesTableByRows().collect {
-                Timber.i(it.toString())
-                rates.add(it)
-            }
-        }*/
-        Timber.e("init")
-    }
 
     val currenciesList by lazy { currencyRepository.getList() }
 
     fun convert(){
-        Timber.e("${from.value}   ${to.value}")
         if (!(from.value.isNullOrEmpty() or to.value.isNullOrEmpty())) {
             toAmount.value = (currencyRepository.convert(from.value!!, to.value!!) * fromAmount.value?.toDouble()!!).toString()
         }
