@@ -55,6 +55,12 @@ class AppModule(private val app: CurrencyConverterApp) {
 
     @Provides
     @Singleton
+    fun provideCurrencyApi(retrofit: Retrofit): ExchangeRatesApi {
+        return retrofit.create(ExchangeRatesApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()

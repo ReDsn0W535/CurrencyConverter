@@ -8,16 +8,15 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Inject
 
 
 class CurrencyRepository @Inject constructor(
-    retrofit: Retrofit,
-    private val gson: Gson,
-    private val currencyDao: CurrencyDao
+        private val networkClient: ExchangeRatesApi,
+        private val gson: Gson,
+        private val currencyDao: CurrencyDao
 ) {
-    private val networkClient = retrofit.create(ExchangeRatesApi::class.java)
     private val scope = CoroutineScope(Dispatchers.IO)
     private val currenciesList = scope.async {
         gson.fromJson(networkClient.getLatestExchangeRates(null), JsonObject::class.java)
@@ -63,6 +62,7 @@ class CurrencyRepository @Inject constructor(
     }
 
     fun convert(from: String, to: String): Double {
+        //Timber.i("KEK ${getTable()}")
         getTable().forEach {
             if (it.base == from)
                 return it.rates?.get(to) ?: error("not found")
