@@ -18,7 +18,6 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 
-//TODO("добавить BaseFragment")
 open class MainFragment : BaseFragment<MainFragmentBinding>() {
     companion object {
         const val TAG = "MainFragment"

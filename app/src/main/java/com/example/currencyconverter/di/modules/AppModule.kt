@@ -3,6 +3,7 @@ package com.example.currencyconverter.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.example.currencyconverter.CurrencyConverterApp
+import com.example.currencyconverter.data.api.ExchangeRatesApi
 import com.example.currencyconverter.data.database.CurrencyDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
