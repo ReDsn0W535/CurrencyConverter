@@ -1,10 +1,7 @@
 package com.example.currencyconverter.repository
 
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.example.currencyconverter.data.api.ExchangeRatesApi
 import com.example.currencyconverter.data.database.CurrencyDao
-import com.example.currencyconverter.data.database.CurrencyDatabase
 import com.example.currencyconverter.data.model.Currency
 import com.example.currencyconverter.reposiroty.CurrencyRepository
 import com.google.gson.Gson
@@ -31,12 +28,7 @@ class CurrencyRepositoryTest {
                 .setPrettyPrinting()
                 .create()
         val api = Mockito.mock(ExchangeRatesApi::class.java)
-        val db = Room.inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext(),
-                CurrencyDatabase::class.java
-        )
-                .build()
-        val dao = Mockito.mock(CurrencyDao::class.java)/*db.currencyDao()*/
+        val dao = Mockito.mock(CurrencyDao::class.java)
         Mockito.`when`(dao.getAll()).thenReturn(arrayListOf(
                 gson.fromJson(stringUsd, Currency::class.java),
                 gson.fromJson(stringRub, Currency::class.java)
@@ -62,13 +54,13 @@ class CurrencyRepositoryTest {
     }
 
     @Test
-    fun getTable() {
+    fun getTable() = runBlocking {
         val table = repository?.getTable()!!
         assert(table.contains(Gson().fromJson(stringRub, Currency::class.java)) && table.contains(Gson().fromJson(stringUsd, Currency::class.java)))
     }
 
     @Test
-    fun convert() {
+    fun convert() = runBlocking {
         repository?.convert("USD", "RUB")
         assertEquals(1.0 ,repository?.convert("RUB", "RUB"))
         assertEquals(1.0 ,repository?.convert("USD", "USD"))

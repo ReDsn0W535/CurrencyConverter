@@ -8,7 +8,6 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -18,6 +17,7 @@ class CurrencyRepository @Inject constructor(
         private val currencyDao: CurrencyDao
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
+    private val isDatabaseEmpty = currencyDao.getAll().isEmpty()
     private val currenciesList = scope.async {
         gson.fromJson(networkClient.getLatestExchangeRates(null), JsonObject::class.java)
             .getAsJsonObject("rates")
@@ -49,8 +49,10 @@ class CurrencyRepository @Inject constructor(
         }
     }
 
-    fun getTable(): ArrayList<Currency> {
+    suspend fun getTable(): ArrayList<Currency> {
         return try {
+            if (isDatabaseEmpty)
+                currenciesTable.await()
             currenciesTable.getCompleted()
         } catch (e: Exception) {
             currenciesTable.cancel()
@@ -61,8 +63,7 @@ class CurrencyRepository @Inject constructor(
 
     }
 
-    fun convert(from: String, to: String): Double {
-        //Timber.i("KEK ${getTable()}")
+    suspend fun convert(from: String, to: String): Double {
         getTable().forEach {
             if (it.base == from)
                 return it.rates?.get(to) ?: error("not found")

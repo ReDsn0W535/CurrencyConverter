@@ -15,6 +15,7 @@ import com.example.currencyconverter.ui.recycler.CurrencyRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -42,7 +43,9 @@ open class MainFragment : BaseFragment<MainFragmentBinding>() {
             currencyFrom.setOnClickListener(Listener())
             currencyTo.setOnClickListener(Listener())
             convertButton.setOnClickListener {
-                this@MainFragment.mViewModel.convert()
+                runBlocking {
+                    this@MainFragment.mViewModel.convert()
+                }
             }
         }
     }

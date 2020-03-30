@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 
     val currenciesList by lazy { currencyRepository.getList() }
 
-    fun convert(){
+    suspend fun convert(){
         if (!(from.value.isNullOrEmpty() or to.value.isNullOrEmpty())) {
             toAmount.value = (currencyRepository.convert(from.value!!, to.value!!) * fromAmount.value?.toDouble()!!).toString()
         }
