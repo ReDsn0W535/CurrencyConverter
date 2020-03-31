@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyconverter.R
 import com.example.currencyconverter.data.model.Currency
+import kotlinx.coroutines.Deferred
 
 class CurrencyRecyclerAdapter(
     private val currencies: Array<String>,

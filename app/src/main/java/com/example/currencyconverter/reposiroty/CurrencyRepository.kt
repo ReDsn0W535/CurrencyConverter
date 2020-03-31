@@ -17,7 +17,6 @@ class CurrencyRepository @Inject constructor(
         private val currencyDao: CurrencyDao
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
-    private val isDatabaseEmpty = currencyDao.getAll().isEmpty()
     private val currenciesList = scope.async {
         gson.fromJson(networkClient.getLatestExchangeRates(null), JsonObject::class.java)
             .getAsJsonObject("rates")
@@ -27,7 +26,9 @@ class CurrencyRepository @Inject constructor(
     private val currenciesTable = scope.async {
         val list = arrayListOf<Currency>()
         currenciesList.await().forEach { currency ->
-            list.add(getRatesByCurrency(currency))
+            list.add(getRatesByCurrency(currency).also {
+                currencyDao.insert(it)
+            })
         }
         list
     }
@@ -40,7 +41,6 @@ class CurrencyRepository @Inject constructor(
         return try {
             currenciesList.getCompleted()
         } catch (e: Exception) {
-            currenciesList.cancel()
             val curNames = arrayListOf<String>()
             currencyDao.getAll().forEach {
                 curNames.add(it.base)
@@ -49,13 +49,10 @@ class CurrencyRepository @Inject constructor(
         }
     }
 
-    suspend fun getTable(): ArrayList<Currency> {
+    fun getTable(): ArrayList<Currency> {
         return try {
-            if (isDatabaseEmpty)
-                currenciesTable.await()
             currenciesTable.getCompleted()
         } catch (e: Exception) {
-            currenciesTable.cancel()
             arrayListOf<Currency>().also {
                 it.addAll(currencyDao.getAll())
             }
@@ -63,7 +60,7 @@ class CurrencyRepository @Inject constructor(
 
     }
 
-    suspend fun convert(from: String, to: String): Double {
+    fun convert(from: String, to: String): Double {
         getTable().forEach {
             if (it.base == from)
                 return it.rates?.get(to) ?: error("not found")

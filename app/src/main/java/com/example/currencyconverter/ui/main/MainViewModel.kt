@@ -2,9 +2,11 @@ package com.example.currencyconverter.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.currencyconverter.data.model.Currency
+import androidx.lifecycle.viewModelScope
 import com.example.currencyconverter.reposiroty.CurrencyRepository
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -12,13 +14,13 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val from = MutableLiveData<String>()
-    val fromAmount = MutableLiveData<String>("1")
+    val fromAmount = MutableLiveData("1")
     val to = MutableLiveData<String>()
     val toAmount = MutableLiveData<String>()
 
-    val currenciesList by lazy { currencyRepository.getList() }
+    fun currenciesList() = currencyRepository.getList()
 
-    suspend fun convert(){
+    fun convert(){
         if (!(from.value.isNullOrEmpty() or to.value.isNullOrEmpty())) {
             toAmount.value = (currencyRepository.convert(from.value!!, to.value!!) * fromAmount.value?.toDouble()!!).toString()
         }

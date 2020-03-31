@@ -15,7 +15,8 @@ import com.example.currencyconverter.ui.recycler.CurrencyRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -43,23 +44,34 @@ open class MainFragment : BaseFragment<MainFragmentBinding>() {
             currencyFrom.setOnClickListener(Listener())
             currencyTo.setOnClickListener(Listener())
             convertButton.setOnClickListener {
-                runBlocking {
-                    this@MainFragment.mViewModel.convert()
-                }
+                this@MainFragment.mViewModel.convert()
+            }
             }
         }
-    }
 
     private inner class Listener : View.OnClickListener{
         override fun onClick(v: View?) {
             val dialog = BottomSheetDialog(this@MainFragment.requireContext())
             val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
             dialogView.findViewById<RecyclerView>(R.id.currencies).apply {
-                adapter = CurrencyRecyclerAdapter(this@MainFragment.mViewModel.currenciesList) { value ->
-                    (v as TextInputEditText).setText(value, TextView.BufferType.EDITABLE)
-                    dialog.dismiss()
+                MainScope().launch {
+                    val list = this@MainFragment.mViewModel.currenciesList()
+                    adapter = if (list.isEmpty())
+                        CurrencyRecyclerAdapter(
+                                arrayOf("Internet error and database is empty!"),
+                                null
+                        )
+                    else
+                        CurrencyRecyclerAdapter(list) { value ->
+                            (v as TextInputEditText).setText(
+                                    value,
+                                    TextView.BufferType.EDITABLE
+                            )
+                            dialog.dismiss()
+                        }
+                    layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+
                 }
-                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             }
             dialog.setContentView(dialogView)
             dialog.show()
